@@ -7,7 +7,7 @@ const {
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
-  const products = await fetchAll("products");
+  const products = await fetchAll();
   res.render("admin/products", {
     products,
     pageTitle: "Admin Products",
@@ -21,8 +21,8 @@ exports.getEditProduct = async (req, res, next) => {
     return res.redirect("/");
   }
 
-  const prodId = req.params.productId;
-  const product = await findProductById(prodId);
+  const id = req.params.productId;
+  const product = await findProductById(id);
   if (product.id === "undefined") {
     return res.redirect("/"); // not the best UX, but it's a dummy project
   }
@@ -36,11 +36,11 @@ exports.getEditProduct = async (req, res, next) => {
 };
 
 exports.postEditProduct = async (req, res, next) => {
-  const prodId = req.body.productId;
+  const id = req.body.productId;
   const { title, imageUrl, description, price } = req.body;
-  const product = { prodId, title, imageUrl, description, price };
+  const product = { id, title, imageUrl, description, price };
 
-  console.log("controllers/admin.js | Edited productId: ", prodId);
+  console.log("controllers/admin.js | Edited productId: ", id);
   await updateProduct(product);
   res.redirect("/");
 };
@@ -61,7 +61,7 @@ exports.postAddProduct = async (req, res, next) => {
 };
 
 exports.postDeleteProduct = async (req, res, next) => {
-  const prodId = req.body.productId;
-  await deleteProduct(prodId);
+  const id = req.body.productId;
+  await deleteProduct(id);
   res.redirect("/admin/products");
 };

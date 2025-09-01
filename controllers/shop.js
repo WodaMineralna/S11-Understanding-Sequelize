@@ -11,8 +11,8 @@ exports.getProductsPage = async (req, res, next) => {
 };
 
 exports.getProduct = async (req, res, next) => {
-  const prodId = req.params.id;
-  const filteredProduct = await findProductById(prodId);
+  const id = req.params.id;
+  const filteredProduct = await findProductById(id);
 
   res.render("shop/product-detail", {
     product: filteredProduct,
@@ -22,7 +22,7 @@ exports.getProduct = async (req, res, next) => {
 };
 
 exports.getIndex = async (req, res, next) => {
-  const products = await fetchAll("products");
+  const products = await fetchAll();
   res.render("shop/index", {
     products,
     pageTitle: "Shop",
@@ -54,20 +54,18 @@ exports.getCart = async (req, res, next) => {
 };
 
 exports.postCart = async (req, res, next) => {
-  const prodId = req.body.productId;
-  console.log(
-    `console.log() in 'controllers/shop.js: ${prodId} - added productId`
-  ); // DEBUGGING
+  const id = req.body.productId;
+  console.log(`console.log() in 'controllers/shop.js: ${id} - added productId`); // DEBUGGING
 
-  await Cart.addProduct(prodId);
+  await Cart.addProduct(id);
 
   res.redirect("/cart");
 };
 
 exports.postDeleteCart = async (req, res, next) => {
-  const prodId = req.body.productId;
+  const id = req.body.productId;
 
-  await Cart.deleteCartItem(prodId);
+  await Cart.deleteCartItem(id);
   res.redirect("/cart");
 };
 

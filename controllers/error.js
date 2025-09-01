@@ -6,11 +6,11 @@ exports.get404 = (req, res, next) => {
   });
 };
 
-exports.getErrorPage = (err, req, res, next) => {
-  const status = err.status || 500;
-  const message = err.message || "Unexpected error!";
+exports.getErrorPage = (error, req, res, next) => {
+  const status = error.status || 500;
+  const message = error.message || "Unexpected error!";
 
-  console.log(err); // DEBUGGING
+  console.log(error); // DEBUGGING
   res.status(status).render("error", {
     errorData: {
       message: `Error (${status}): ${message}`,

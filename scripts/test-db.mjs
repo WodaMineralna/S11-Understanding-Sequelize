@@ -1,17 +1,15 @@
-import pool from "../src/db/pool.js";
+import sequelize from "../src/db/pool.js";
+import { fetchAll } from "../models/product.js";
 
 try {
-  const [[{ now }]] = await pool.query("SELECT NOW() AS now");
-  const [[{ db }]] = await pool.query("SELECT DATABASE() AS db");
-  const [rows] = await pool.query("SELECT * FROM products")
+  await sequelize.authenticate();
+  const dbData = await fetchAll();
   console.log("===== DB connection OK =====");
-  console.log("   Database: ", db);
-  console.log("   Time now: ", now);
-  console.log(rows)
-} catch (err) {
+  console.log(dbData);
+} catch (error) {
   console.error("===== DB connection FAILED =====");
-  console.error(err.message);
+  console.error(error.message);
   process.exit(1);
 } finally {
-  await pool.end();
+  await sequelize.close();
 }
