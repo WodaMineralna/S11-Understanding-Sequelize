@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: nodejsproject_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:${DB_PORT:-3306}:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./sql/init:/docker-entrypoint-initdb.d:ro
+      
+volumes:
+  dbdata:
