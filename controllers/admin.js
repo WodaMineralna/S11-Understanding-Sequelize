@@ -7,7 +7,7 @@ const {
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
-  const products = await fetchAll();
+  const products = await fetchAll(req.user);
   res.render("admin/products", {
     products,
     pageTitle: "Admin Products",
@@ -22,10 +22,7 @@ exports.getEditProduct = async (req, res, next) => {
   }
 
   const id = req.params.productId;
-  const product = await findProductById(id);
-  if (product.id === "undefined") {
-    return res.redirect("/"); // not the best UX, but it's a dummy project
-  }
+  const product = await findProductById(id, req.user);
 
   res.render("admin/edit-product", {
     pageTitle: "Edit Product",
@@ -56,7 +53,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = async (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
   const product = { title, imageUrl, description, price };
-  const addedProductId = await addProduct(product);
+  const addedProductId = await addProduct(req.user, product);
   res.redirect(`/products/${addedProductId}`);
 };
 

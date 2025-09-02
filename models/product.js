@@ -30,23 +30,39 @@ const Product = sequelize.define("product", {
 
 // ! currently won't be using the helper function [utils/db-helpers loadData()]
 // TODO use the helper function in the future
-async function fetchAll() {
+async function fetchAll(user) {
   try {
-    const products = await Product.findAll({ raw: true });
+    let products;
+
+    if (user) {
+      products = await user.getProducts({ raw: true });
+    } else {
+      products = await Product.findAll({ raw: true });
+    }
     return products;
   } catch (error) {
     throw new Error(`An error occurred while fetching db data! --- ${error}`);
   }
 }
 
-async function findProductById(id) {
+async function findProductById(id, user) {
   try {
-    const product = await Product.findByPk(id);
+    let product;
+
+    if (user) {
+      product = await user.getProducts({ where: { id } }); // ^ yields an empty array, when no product was found
+    } else {
+      product = await Product.findByPk(id);
+    }
+    if (!product || product.length === 0) {
+      // ^ so product.length === 0 must be also checked here
+      throw new Error(`No product found with ID: ${id}`);
+    }
     // console.log(`Found product with ID: ${id} ---`, product); // DEBUGGING
     return product;
   } catch (error) {
     throw new Error(
-      `An error occurred while fetching ID: (${id}) item data data! --- ${error}`
+      `An error occurred while fetching ID: (${id}) item data! --- ${error}`
     );
   }
 }
@@ -71,9 +87,9 @@ async function updateProduct(productUpdateData) {
 }
 
 // ? probably gonna outsorce the function to a helper function (utils/db-helpers.js)    --    so it's reusable in addToCart functions
-async function addProduct(productData) {
+async function addProduct(user, productData) {
   try {
-    const addedProduct = await Product.create({ ...productData });
+    const addedProduct = await user.createProduct({ ...productData });
     console.log(`Added product data: ${addedProduct}`); // DEBUGGING
     return addedProduct.id;
   } catch (error) {
@@ -102,6 +118,7 @@ async function deleteProduct(id) {
 }
 
 module.exports = {
+  Product,
   fetchAll,
   findProductById,
   updateProduct,
