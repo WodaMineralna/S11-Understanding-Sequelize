@@ -9,6 +9,8 @@ Each item will be checked off as it’s implemented.
 [ ] Update sql/init files after adding DB functionality for Cart and Orders
 
 ## Medium Priority
+[ ] Update test-db script so it works with new User model
 [ ] Add tests for Cart DB and Order DB
 
 ## Low Priority / Nice to Have
+[ ] Reimplement db-helpers.js loadData function
