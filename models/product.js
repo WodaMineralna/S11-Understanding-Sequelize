@@ -114,7 +114,6 @@ async function addProduct(user, productData, isCart) {
       product = await Product.findByPk(productData);
       if (!product) throw new Error("Product not found");
 
-      console.log("🔥TEST 🔥 TEST🔥", product, quantity);
       await cart.addProduct(product, { through: { quantity: 1 } });
       return;
     }
