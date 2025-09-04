@@ -1,4 +1,4 @@
-const { fetchAll, findProductById } = require("../models/product");
+const { fetchAll, findProductById, addProduct } = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getProductsPage = async (req, res, next) => {
@@ -31,23 +31,11 @@ exports.getIndex = async (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-  const cart = await Cart.fetchAll(); // contains only item ID and item quantity
-  const products = [];
-
-  for (const item of cart) {
-    const filteredItem = await Product.findProductById(item.id); // ^ fetch the full cart item data
-    // console.log(filteredItem); // DEBUGGING
-    products.push({
-      ...filteredItem,
-      quantity: item.quantity,
-      totalPrice: Number((filteredItem.price * item.quantity).toFixed(2)),
-    });
-  }
-
-  console.log(products); // DEBUGGING
+  const cartItems = await fetchAll(req.user, "cart");
+  console.log('🔥TEST 🔥 TEST🔥', cartItems)
 
   res.render("shop/cart", {
-    products,
+    products: cartItems,
     path: "/cart",
     pageTitle: "Your Cart",
   });
@@ -55,13 +43,13 @@ exports.getCart = async (req, res, next) => {
 
 exports.postCart = async (req, res, next) => {
   const id = req.body.productId;
-  console.log(`console.log() in 'controllers/shop.js: ${id} - added productId`); // DEBUGGING
 
-  await Cart.addProduct(id);
+  await addProduct(req.user, id, "cart");
 
   res.redirect("/cart");
 };
 
+// ! TO BE IMPLEMENTED
 exports.postDeleteCart = async (req, res, next) => {
   const id = req.body.productId;
 

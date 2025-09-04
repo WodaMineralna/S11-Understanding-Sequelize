@@ -30,9 +30,14 @@ const Product = sequelize.define("product", {
 
 // ! currently won't be using the helper function [utils/db-helpers loadData()]
 // TODO use the helper function in the future
-async function fetchAll(user) {
+async function fetchAll(user, isCart) {
   try {
     let products;
+
+    if (user && isCart === "cart") {
+      products = await user.getCart({ raw: true });
+      return products;
+    }
 
     if (user) {
       products = await user.getProducts({ raw: true });
@@ -86,9 +91,34 @@ async function updateProduct(productUpdateData) {
   }
 }
 
-// ? probably gonna outsorce the function to a helper function (utils/db-helpers.js)    --    so it's reusable in addToCart functions
-async function addProduct(user, productData) {
+// ! function used both in creating a product, and adding a product to cart
+async function addProduct(user, productData, isCart) {
   try {
+    if (isCart === "cart") {
+      const cart = await user.getCart();
+      const products = await cart.getProducts({
+        where: { id: productData },
+      });
+
+      let product;
+      let quantity;
+
+      // if product already exists in the cart, increase quantity
+      if (products.length > 0) {
+        product = products[0];
+        quantity = product.cartItem.quantity || 0;
+        await product.cartItem.update({ quantity: quantity + 1 });
+        return;
+      }
+
+      product = await Product.findByPk(productData);
+      if (!product) throw new Error("Product not found");
+
+      console.log("🔥TEST 🔥 TEST🔥", product, quantity);
+      await cart.addProduct(product, { through: { quantity: 1 } });
+      return;
+    }
+
     const addedProduct = await user.createProduct({ ...productData });
     console.log(`Added product data: ${addedProduct}`); // DEBUGGING
     return addedProduct.id;

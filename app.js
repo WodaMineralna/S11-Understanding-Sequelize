@@ -5,6 +5,8 @@ const express = require("express");
 const sequelize = require("./src/db/pool");
 const { Product } = require("./models/product");
 const { User } = require("./models/user");
+const { Cart } = require("./models/cart");
+const { CartItem } = require("./models/cart-item");
 
 const errorController = require("./controllers/error");
 
@@ -43,9 +45,14 @@ app.use(errorController.getErrorPage);
 // ^ if User is deleted, all Products belonging to it will also be deleted
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+Cart.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasOne(Cart);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 // * .sync() creates tables for all Sequelize Models and defines their relations
 sequelize
+  // .sync({ force: true })
   .sync()
   .then(() => {
     return User.findByPk(USER_ID);
@@ -56,8 +63,14 @@ sequelize
     }
     return Promise.resolve(user);
   })
-  .then((user) => {
-    // console.log("Active user:", user); // DEBUGGING
+  .then(async (user) => {
+    const cart = await user.getCart();
+    if (!cart) {
+      return await user.createCart();
+    }
+    return Promise.resolve(cart);
+  })
+  .then((cart) => {
     app.listen(3000);
   })
   .catch((error) => {
