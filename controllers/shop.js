@@ -3,6 +3,7 @@ const {
   findProductById,
   addProduct,
   deleteProduct,
+  addOrder,
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
@@ -59,11 +60,19 @@ exports.postDeleteCart = async (req, res, next) => {
   res.redirect("/cart");
 };
 
-exports.getOrders = (req, res, next) => {
+exports.getOrders = async (req, res, next) => {
+  const orders = await fetchAll(req.user, "orders");
   res.render("shop/orders", {
+    orders,
     path: "/orders",
     pageTitle: "Your Orders",
   });
+};
+
+exports.postOrder = async (req, res, next) => {
+  await addOrder(req.user);
+
+  res.redirect("/orders");
 };
 
 exports.getCheckout = (req, res, next) => {

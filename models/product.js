@@ -30,15 +30,19 @@ const Product = sequelize.define("product", {
 
 // ! currently won't be using the helper function [utils/db-helpers loadData()]
 // TODO use the helper function in the future
-async function fetchAll(user, isCart) {
+async function fetchAll(user, table) {
   try {
     let products;
 
-    if (user && isCart === "cart") {
+    if (user && table === "cart") {
       const cart = await user.getCart();
       products = await cart.getProducts();
       // console.log("Fetched cart items:", products); // DEBUGGING
       return products;
+    }
+    if (user && table === "orders") {
+      const orders = await user.getOrders({ include: ["products"] });
+      return orders;
     }
 
     if (user) {
@@ -152,6 +156,28 @@ async function deleteProduct(id, user, isCart) {
   }
 }
 
+async function addOrder(user) {
+  try {
+    const cart = await fetchAll(user, "cart");
+    const order = await user.createOrder();
+    if (!cart || !order) {
+      throw new Error("Could not fetch cart or create a new order");
+    }
+
+    // console.log("Created order:", order); // DEBUGGING
+    await order.addProducts(
+      cart.map((product) => {
+        product.orderItem = { quantity: product.cartItem.quantity };
+        return product;
+      })
+    );
+    const cartInstance = await user.getCart();
+    return await cartInstance.setProducts(null);
+  } catch (error) {
+    throw new Error(`An error occurred while adding a new order! --- ${error}`);
+  }
+}
+
 module.exports = {
   Product,
   fetchAll,
@@ -159,4 +185,5 @@ module.exports = {
   updateProduct,
   addProduct,
   deleteProduct,
+  addOrder,
 };
