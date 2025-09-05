@@ -58,17 +58,21 @@ async function findProductById(id, user) {
   try {
     let product;
 
-    if (user) {
-      product = await user.getProducts({ where: { id } }); // ^ yields an empty array, when no product was found
-    } else {
+    if (!user) {
       product = await Product.findByPk(id);
+      return product;
+    } else {
+      product = await user.getProducts({ where: { id } }); // ^ yields an empty array, when no product was found
     }
+
     if (!product || product.length === 0) {
       // ^ so product.length === 0 must be also checked here
       throw new Error(`No product found with ID: ${id}`);
     }
     // console.log(`Found product with ID: ${id} ---`, product); // DEBUGGING
-    return product;
+    const singleProduct = product[0];
+    const productObj = singleProduct?.get({ plain: true });
+    return productObj;
   } catch (error) {
     throw new Error(
       `An error occurred while fetching ID: (${id}) item data! --- ${error}`
