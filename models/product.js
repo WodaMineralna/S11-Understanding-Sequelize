@@ -28,8 +28,6 @@ const Product = sequelize.define("product", {
   },
 });
 
-// ! currently won't be using the helper function [utils/db-helpers loadData()]
-// TODO use the helper function in the future
 async function fetchAll(user, table) {
   try {
     let products;

@@ -14,4 +14,3 @@ Each item will be checked off as it’s implemented.
 [ ] Add tests for Cart DB and Order DB
 
 ## Low Priority / Nice to Have
-[ ] Reimplement db-helpers.js loadData function
