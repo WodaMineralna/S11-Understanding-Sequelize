@@ -35,7 +35,9 @@ async function fetchAll(user, isCart) {
     let products;
 
     if (user && isCart === "cart") {
-      products = await user.getCart({ raw: true });
+      const cart = await user.getCart();
+      products = await cart.getProducts();
+      // console.log("Fetched cart items:", products); // DEBUGGING
       return products;
     }
 
