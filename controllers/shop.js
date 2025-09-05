@@ -1,5 +1,9 @@
-const { fetchAll, findProductById, addProduct } = require("../models/product");
-const Cart = require("../models/cart");
+const {
+  fetchAll,
+  findProductById,
+  addProduct,
+  deleteProduct,
+} = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
   const products = await fetchAll();
@@ -32,7 +36,6 @@ exports.getIndex = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   const cartItems = await fetchAll(req.user, "cart");
-  console.log('🔥TEST 🔥 TEST🔥', cartItems)
 
   res.render("shop/cart", {
     products: cartItems,
@@ -49,11 +52,10 @@ exports.postCart = async (req, res, next) => {
   res.redirect("/cart");
 };
 
-// ! TO BE IMPLEMENTED
 exports.postDeleteCart = async (req, res, next) => {
   const id = req.body.productId;
 
-  await Cart.deleteCartItem(id);
+  await deleteProduct(id, req.user, "cart");
   res.redirect("/cart");
 };
 

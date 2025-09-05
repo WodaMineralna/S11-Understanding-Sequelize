@@ -130,17 +130,21 @@ async function addProduct(user, productData, isCart) {
   }
 }
 
-async function deleteProduct(id) {
+async function deleteProduct(id, user, isCart) {
   try {
-    const product = await Product.findByPk(id);
+    if (isCart === "cart") {
+      const cart = await user.getCart();
+      await cart.removeProduct(id);
+      return;
+    }
 
+    const product = await Product.findByPk(id);
     if (!product) {
-      throw new Error(`No product found with ID: ${productId}`);
+      throw new Error(`No product found with ID: ${id}`);
     }
 
     await product.destroy();
-    // const result = await product.update(productUpdateData); // DEBUGGING
-    // console.log(`Updated product with ID: ${productId} ---`, result); // DEBUGGING
+    // console.log(`Updated product with ID: ${id} ---`, result); // DEBUGGING
   } catch (error) {
     throw new Error(
       `An error occurred while deleting (ID: ${id}) product! --- ${error}`
