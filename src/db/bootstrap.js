@@ -24,8 +24,8 @@ async function ensureSchema() {
 }
 
 async function ensureUserAndCart(userId = 1) {
-  const { User } = sequelize.models;
   try {
+    const { User } = sequelize.models;
     let user = await User.findByPk(userId);
     if (!user) {
       user = await User.create({

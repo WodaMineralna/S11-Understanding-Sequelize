@@ -42,8 +42,16 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 app.use(errorController.getErrorPage);
 
+// ! IIFE
 // * creates tables for all Sequelize Models and defines their associations, creates User and Cart if doesn't exist
-catchErrAsync(ensureSchema());
-catchErrAsync(ensureUserAndCart(USER_ID));
+(async () => {
+  try {
+    await ensureSchema();
+    await ensureUserAndCart(USER_ID);
+  } catch (error) {
+    console.log("Startup failed:", error);
+    process.exit(1);
+  }
+})();
 
 app.listen(3000);

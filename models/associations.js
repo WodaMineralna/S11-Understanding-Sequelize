@@ -1,4 +1,4 @@
-export function applyAssociations(sequelize) {
+function applyAssociations(sequelize) {
   const { Product, User, Cart, CartItem, Order, OrderItem } = sequelize.models;
 
   // ^ if User is deleted, all Products belonging to it will also be deleted
@@ -16,3 +16,5 @@ export function applyAssociations(sequelize) {
   Order.belongsToMany(Product, { through: OrderItem });
   Product.belongsToMany(Order, { through: OrderItem });
 }
+
+module.exports = { applyAssociations };

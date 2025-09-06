@@ -1,5 +1,6 @@
 {
   "name": "nodejs-complete-guide",
+  "type": "commonjs",
   "version": "1.0.0",
   "description": "Complete Node.js Guide",
   "main": "app.js",
@@ -10,7 +11,7 @@
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d",
-    "test:db": "node scripts/test-db.mjs"
+    "test:db": "node scripts/test-db.cjs"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
