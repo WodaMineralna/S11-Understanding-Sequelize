@@ -4,7 +4,11 @@ const express = require("express");
 
 require("dotenv").config();
 
-const { ensureSchema, ensureUserAndCart } = require("./src/db/bootstrap");
+const {
+  ensureSchema,
+  ensureUserAndCart,
+  ensureSeedProducts,
+} = require("./src/db/bootstrap");
 
 const { User } = require("./models/user");
 
@@ -23,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // dummy User selector
-const USER_ID = process.env.USER_ID;
+const USER_ID = Number(process.env.USER_ID) || 1;
 
 app.use(
   catchErrAsync(async (req, res, next) => {
@@ -48,6 +52,10 @@ app.use(errorController.getErrorPage);
   try {
     await ensureSchema();
     await ensureUserAndCart(USER_ID);
+    
+    if (process.env.SEED_PRODUCTS === "true") {
+      await ensureSeedProducts({ ownerUserId: USER_ID });
+    }
   } catch (error) {
     console.log("Startup failed:", error);
     process.exit(1);

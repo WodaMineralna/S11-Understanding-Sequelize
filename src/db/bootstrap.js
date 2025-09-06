@@ -8,6 +8,8 @@ require("../../models/order");
 require("../../models/order-item");
 const { applyAssociations } = require("../../models/associations");
 
+const PRODUCTS_SEED = require("../seeds/products");
+
 // * .sync() creates tables for all Sequelize Models and defines their relations
 // ! dev only - 'migrations' should be used in prod
 async function ensureSchema() {
@@ -43,4 +45,17 @@ async function ensureUserAndCart(userId = 1) {
   }
 }
 
-module.exports = { ensureSchema, ensureUserAndCart };
+async function ensureSeedProducts({ ownerUserId }) {
+  const { Product, User } = sequelize.models;
+  const owner = await User.findByPk(ownerUserId);
+
+  for (const p of PRODUCTS_SEED) {
+    const existing = await Product.findByPk(p.id);
+    if (!existing) {
+      if (owner?.createProduct) await owner.createProduct(p);
+      else await Product.create({ ...p, userId: ownerUserId });
+    }
+  }
+}
+
+module.exports = { ensureSchema, ensureUserAndCart, ensureSeedProducts };
