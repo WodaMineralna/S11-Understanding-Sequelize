@@ -2,8 +2,8 @@ const { DataTypes } = require("sequelize");
 
 const sequelize = require("../src/db/pool");
 
-// ! sequelize.sync() in app.js will automatically pluralise the table name ('product' --> 'products')
-const Product = sequelize.define("product", {
+// ! sequelize.sync() in app.js will automatically pluralise the table name ('Product' --> 'Products')
+const Product = sequelize.define("Product", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -39,7 +39,7 @@ async function fetchAll(user, table) {
       return products;
     }
     if (user && table === "orders") {
-      const orders = await user.getOrders({ include: ["products"] });
+      const orders = await user.getOrders({ include: ["Products"] });
       return orders;
     }
 
@@ -169,7 +169,7 @@ async function addOrder(user) {
     // console.log("Created order:", order); // DEBUGGING
     await order.addProducts(
       cart.map((product) => {
-        product.orderItem = { quantity: product.cartItem.quantity };
+        product.OrderItem = { quantity: product.CartItem.quantity };
         return product;
       })
     );

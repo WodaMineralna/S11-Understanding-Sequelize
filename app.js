@@ -2,13 +2,11 @@ const path = require("path");
 
 const express = require("express");
 
-const sequelize = require("./src/db/pool");
-const { Product } = require("./models/product");
+require("dotenv").config();
+
+const { ensureSchema, ensureUserAndCart } = require("./src/db/bootstrap");
+
 const { User } = require("./models/user");
-const { Cart } = require("./models/cart");
-const { CartItem } = require("./models/cart-item");
-const { Order } = require("./models/order");
-const { OrderItem } = require("./models/order-item");
 
 const errorController = require("./controllers/error");
 
@@ -25,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // dummy User selector
-const USER_ID = 2;
+const USER_ID = process.env.USER_ID;
 
 app.use(
   catchErrAsync(async (req, res, next) => {
@@ -44,41 +42,8 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 app.use(errorController.getErrorPage);
 
-// ^ if User is deleted, all Products belonging to it will also be deleted
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Product);
-Cart.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasOne(Cart);
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product, { through: OrderItem });
-Product.belongsToMany(Order, { through: OrderItem });
+// * creates tables for all Sequelize Models and defines their associations, creates User and Cart if doesn't exist
+catchErrAsync(ensureSchema());
+catchErrAsync(ensureUserAndCart(USER_ID));
 
-// * .sync() creates tables for all Sequelize Models and defines their relations
-sequelize
-  // .sync({ alter: true })
-  .sync()
-  .then(() => {
-    return User.findByPk(USER_ID);
-  })
-  .then((user) => {
-    if (!user) {
-      return User.create({ name: "Igor", email: `${Date.now()}@test.com` }); // ! yields a Promise, so the 2nd return has to be a Promise too
-    }
-    return Promise.resolve(user);
-  })
-  .then(async (user) => {
-    const cart = await user.getCart();
-    if (!cart) {
-      return await user.createCart();
-    }
-    return Promise.resolve(cart);
-  })
-  .then((cart) => {
-    app.listen(3000);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+app.listen(3000);

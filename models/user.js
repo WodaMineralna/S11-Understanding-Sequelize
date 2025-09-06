@@ -3,7 +3,7 @@ const sequelize = require("../src/db/pool");
 
 // ! User authentication will be implemented in the future
 
-const User = sequelize.define("user", {
+const User = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

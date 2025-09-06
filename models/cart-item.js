@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../src/db/pool");
 
-const CartItem = sequelize.define("cartItem", {
+const CartItem = sequelize.define("CartItem", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
