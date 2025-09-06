@@ -10,7 +10,8 @@ Each item will be checked off as it’s implemented.
 [ ] Update .README (especially `Run the app` section)
 
 ## Medium Priority
-[ ] Update test-db script so it works with new User model
-[ ] Add tests for Cart DB and Order DB
+[ ] Make the error page prettier
+[x] Update test-db script so it works with new models
+[x] Add tests for Product, User and Cart DB 
 
 ## Low Priority / Nice to Have
