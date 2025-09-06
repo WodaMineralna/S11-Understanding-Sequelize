@@ -7,7 +7,7 @@ Each item will be checked off as it’s implemented.
 
 ## High Priority 
 [x] Update sql/init files after adding DB functionality for Cart and Orders
-[ ] Update .README (especially `Run the app` section)
+[x] Update .README (especially `Run the app` section)
 
 ## Medium Priority
 [ ] Make the error page prettier

@@ -80,12 +80,11 @@ DB_NAME=academind_demo
    docker compose up -d
    ```
    - Creates database `academind_demo`
-   - Initializes tables - runs [`sql/init/schema.sql`](./sql/init/schema.sql) and [`sql/init/seed.sql`](./sql/init/seed.sql)
 
 #### 3. Run the app
    ```bash
    npm install
-   npm start
+   node .\app.js
    ```
 
 #### 4. Stop the container
@@ -109,23 +108,40 @@ npm run test:db
 
 Expected output:
 ```
+
 ===== DB connection OK =====
-   Database:  [db-name]
-   Time now:  [time-now]
-[
+
+--- Product data: --- [
   {
     id: 1,
-    title: 'Book',
-    price: 12.99,
-    description: 'This is an awesome book!',
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoDXr4is7-bVjWtE-TI4q-l0jHX0SPN4_4Uw&s'
+    title: 'A Book',
+    price: 4.99,
+    description: 'This is a book',
+    imageUrl: 'https://pics.clipartpng.com/Red_Book_PNG_Clipart-1063.png',
+    createdAt: 2025-09-06T21:06:32.000Z
   },
   {
     id: 2,
-    title: 'Pen',
-    price: 2.99,
-    description: 'An awesome pen!',
-    imageUrl: 'https://media.istockphoto.com/id/1304186549/vector/automatic-spring-ballpoint-pen-in-black-case-vector-illustration.jpg?s=612x612&w=0&k=20&c=R_yPawneqKX8J-NeiKmNXuYx36tCoPSCFEHx0Bd4dEg='
+    title: 'A Pen',
+    price: 2.49,
+    description: 'An awesome pen',
+    imageUrl: 'https://png.pngtree.com/png-vector/20240316/ourmid/pngtree-fountain-pen-realistic-png-image_11980898.png',
+    createdAt: 2025-09-06T21:06:32.000Z
+  }
+]
+--- User data: --- [
+  {
+    name: 'Igor',
+    email: '1757192792659@test.com',
+    createdAt: 2025-09-06T21:06:32.000Z
+  }
+]
+--- Cart data: --- [
+  {
+    id: 1,
+    createdAt: 2025-09-06T21:06:32.000Z,
+    updatedAt: 2025-09-06T21:06:32.000Z,
+    UserId: 1
   }
 ]
 
@@ -135,7 +151,7 @@ Expected output:
 
 ## NPM Scripts
 
-- **`npm start`** → start the Node app
+- **`npm start` / `node .\app.js`** → start the Node app
 - **`npm run test:db`** → run DB connectivity test (`scripts/test-db.mjs`)
 - **`npm run db:up`** → start MySQL container in background
 - **`npm run db:down`** → stop MySQL container
