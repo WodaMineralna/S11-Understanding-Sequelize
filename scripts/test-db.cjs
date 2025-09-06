@@ -1,6 +1,10 @@
 require("dotenv").config();
 const sequelize = require("../src/db/pool");
-const { ensureSchema, ensureUserAndCart } = require("../src/db/bootstrap");
+const {
+  ensureSchema,
+  ensureUserAndCart,
+  ensureSeedProducts,
+} = require("../src/db/bootstrap");
 
 const USER_ID = process.env.USER_ID;
 
@@ -11,6 +15,7 @@ const USER_ID = process.env.USER_ID;
     await sequelize.authenticate();
     await ensureSchema();
     await ensureUserAndCart(USER_ID);
+    await ensureSeedProducts(USER_ID);
 
     const productData = await Product.findAll({
       attributes: [

@@ -8,7 +8,7 @@ require("../../models/order");
 require("../../models/order-item");
 const { applyAssociations } = require("../../models/associations");
 
-const PRODUCTS_SEED = require("../seeds/products");
+const { PRODUCTS_SEED } = require("../seeds/products");
 
 // * .sync() creates tables for all Sequelize Models and defines their relations
 // ! dev only - 'migrations' should be used in prod
