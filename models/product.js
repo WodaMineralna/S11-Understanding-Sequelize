@@ -114,8 +114,8 @@ async function addProduct(user, productData, isCart) {
       // if product already exists in the cart, increase quantity
       if (products.length > 0) {
         product = products[0];
-        quantity = product.cartItem.quantity || 0;
-        await product.cartItem.update({ quantity: quantity + 1 });
+        quantity = product.CartItem.quantity || 0;
+        await product.CartItem.update({ quantity: quantity + 1 });
         return;
       }
 
