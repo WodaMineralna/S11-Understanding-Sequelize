@@ -118,7 +118,7 @@ Expected output:
     price: 4.99,
     description: 'This is a book',
     imageUrl: 'https://pics.clipartpng.com/Red_Book_PNG_Clipart-1063.png',
-    createdAt: 2025-09-06T21:06:32.000Z
+    createdAt: [date-now]
   },
   {
     id: 2,
@@ -126,21 +126,21 @@ Expected output:
     price: 2.49,
     description: 'An awesome pen',
     imageUrl: 'https://png.pngtree.com/png-vector/20240316/ourmid/pngtree-fountain-pen-realistic-png-image_11980898.png',
-    createdAt: 2025-09-06T21:06:32.000Z
+    createdAt: [date-now]
   }
 ]
 --- User data: --- [
   {
     name: 'Igor',
-    email: '1757192792659@test.com',
-    createdAt: 2025-09-06T21:06:32.000Z
+    email: '[randomised-number]@test.com',
+    createdAt: [date-now]
   }
 ]
 --- Cart data: --- [
   {
     id: 1,
-    createdAt: 2025-09-06T21:06:32.000Z,
-    updatedAt: 2025-09-06T21:06:32.000Z,
+    createdAt: [date-now],
+    updatedAt: [date],
     UserId: 1
   }
 ]
