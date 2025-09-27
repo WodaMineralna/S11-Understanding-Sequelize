@@ -103,7 +103,7 @@ DB_NAME=academind_demo
 A helper script is included to quickly test DB connectivity
 
 ```bash
-npm run test:db
+npm run db:test
 ```
 
 Expected output:
@@ -152,7 +152,7 @@ Expected output:
 ## NPM Scripts
 
 - **`npm start` / `node .\app.js`** → start the Node app
-- **`npm run test:db`** → run DB connectivity test (`scripts/test-db.mjs`)
+- **`npm run db:test`** → run DB connectivity test (`scripts/test-db.cjs`)
 - **`npm run db:up`** → start MySQL container in background
 - **`npm run db:down`** → stop MySQL container
 - **`npm run db:reset`** → reset database (drop volume + re-init)
